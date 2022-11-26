@@ -25,7 +25,7 @@ pipeline {
                                         sourceFiles: 'dist/trainSchedule.zip',
                                         removePrefix: 'dist/',
                                         remoteDirectory: '/tmp',
-                                        execCommand: 'sudo /usr/local/bin/tomcatdown && rm -rf /opt/train-schedule/* && unzip /tmp/trainSchedule.zip -d /opt/train-schedule && sudo /usr/local/bin/tomcatup'
+                                        execCommand: 'sudo /bin/sh /home/ec2-user/apache-tomcat-9.0.69/bin/shutdown.sh && rm -rf /opt/train-schedule/* && unzip /tmp/trainSchedule.zip -d /opt/train-schedule && sudo /bin/sh /home/ec2-user/apache-tomcat-9.0.69/bin/startup.sh'
                                     )
                                 ]
                             )
