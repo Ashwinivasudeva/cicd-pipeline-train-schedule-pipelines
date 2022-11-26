@@ -34,5 +34,30 @@ pipeline {
                 }
             }
         }
+        
+    stage('DeployToProduction') {
+            
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'webserver_login', keyFileVariable: '')]) {
+                    sshPublisher(
+                        failOnError: true,
+                        continueOnError: false,
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'Production', 
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: 'dist/trainSchedule.zip',
+                                        removePrefix: 'dist/',
+                                        remoteDirectory: '/tmp',
+                                        execCommand: 'sudo /bin/sh /home/ec2-user/apache-tomcat-9.0.69/bin/shutdown.sh && sudo rm -rf /opt/train-schedule/* && sudo unzip /tmp/trainSchedule.zip -d /opt/train-schedule && sudo /bin/sh /home/ec2-user/apache-tomcat-9.0.69/bin/startup.sh'
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                }
+            }
+        }
     }
 }
